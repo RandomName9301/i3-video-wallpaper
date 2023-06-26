@@ -48,6 +48,7 @@ Always play `video.mp4` for **Monitor 1** and `video2.mp4` for **Monitor 2 and b
   -b: Blur the thumbnail. It may be useful if your compositor does not blur the background of the built-in system tray of Polybar.
   -f: Value which is passed to "feh --bg-[value]". Available options: center|fill|max|scale|tile (Default: fill)
   -d: Where the thumbnails is stored. (Default: $HOME/Pictures/i3-video-wallpaper)
+  -u: unmute the video
   -h: Display this text.
 ```
 
