@@ -10,6 +10,7 @@ isPlaying=false
 
 PIDFILE="/var/run/user/$UID/vwp.pid"
 
+AUDIO="--no-audio"
 declare -a PIDs
 declare -a Monitors
 declare -a ThumbnailList
@@ -20,7 +21,7 @@ declare -a IndexMap=(
   [2]="timeStamp"
 )
 
-while getopts ":anwbf:d:h" arg; do
+while getopts ":anwbuf:d:h" arg; do
   case "$arg" in
   "a")
     alwaysRun=true
@@ -40,6 +41,9 @@ while getopts ":anwbf:d:h" arg; do
   "d")
     thumbnailStorePath=$OPTARG
     ;;
+  "u")
+    AUDIO=""
+    ;;
   "h")
     cat <<EOL
 Usage:
@@ -57,6 +61,7 @@ Options:
     -b: Blur the thumbnail. It may be useful if your compositor does not blur the background of the built-in system tray of Polybar.
     -f: Value which is passed to "feh --bg-[value]". Available options: center|fill|max|scale|tile (Default: fill)
     -d: Where the thumbnails is stored. (Default: $HOME/Pictures/i3-video-wallpaper)
+    -u: unmute the video
     -h: Display this text.
 
 EOL
@@ -89,9 +94,9 @@ kill_xwinwrap() {
 
 play_video() {
   if [ $alwaysRun == true ]; then
-    xwinwrap -ov -ni -g "$1" -- mpv --fs --loop-file --no-audio --no-osc --no-osd-bar -wid WID --no-input-default-bindings "$2" &
+    xwinwrap -ov -ni -g "$1" -- mpv --fs --loop-file $AUDIO --no-osc --no-osd-bar -wid %WID --no-input-default-bindings "$2" &
   else
-    xwinwrap -ov -ni -g "$1" -- mpv --fs --loop-file --input-ipc-server="/tmp/mpvsocket$3" --pause --no-audio --no-osc --no-osd-bar -wid WID --no-input-default-bindings "$2" &
+    xwinwrap -ov -ni -g "$1" -- mpv --fs --loop-file --input-ipc-server="/tmp/mpvsocket$3" --pause $AUDIO --no-osc --no-osd-bar -wid %WID --no-input-default-bindings "$2" &
   fi
   PIDs+=($!)
 }
